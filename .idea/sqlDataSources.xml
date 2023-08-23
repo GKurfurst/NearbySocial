@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="9475954b-41e5-4fb2-899f-5d980d64044a" name="alisql Mapping">
+      <data-sources db="8330dc09-cd1b-4d93-9190-0c390821078d" ddl="84c75c67-9313-427f-8fc9-04d02fa3134d" />
+      <scope>
+        <node kind="schema" qname="social" />
+      </scope>
+    </mapping>
+  </component>
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="84c75c67-9313-427f-8fc9-04d02fa3134d" />
+          <option name="name" value="alisql (DDL)" />
+          <option name="dbmsName" value="MYSQL" />
+          <option name="urls">
+            <array>
+              <option value="file://$PROJECT_DIR$" />
+            </array>
+          </option>
+          <option name="outLayout" value="File per object by schema.groovy" />
+        </State>
+      </list>
+    </option>
+  </component>
+</project>
