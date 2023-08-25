@@ -1,4 +1,4 @@
-package gormfunc
+package gorm
 
 import (
 	"encoding/json"
@@ -22,7 +22,7 @@ func (User) TableName() string {
 }
 func loadConfig() (dbConfig, error) {
 	var config dbConfig
-	file, err := os.Open("gormfunc/config.json")
+	file, err := os.Open("gorm/config.json")
 	if err != nil {
 		return config, err
 	}

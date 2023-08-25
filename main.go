@@ -1,7 +1,7 @@
 package main
 
 import (
-	"NearbySocial/gormfunc"
+	"NearbySocial/gorm"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -26,7 +26,7 @@ func asciiArrayToInt(asciiArray []uint8) int {
 }
 
 func main() {
-	db, err := gormfunc.ConnectDB()
+	db, err := gorm.ConnectDB()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +63,7 @@ func main() {
 			//仅实现了根据id查询用户，id为int
 			//intValue := int(message[0])<<24 | int(message[1])<<16 | int(message[2])<<8 | int(message[3])
 			intValue := asciiArrayToInt(message)
-			person, err := gormfunc.GetUserByID(db, intValue)
+			person, err := gorm.GetUserByID(db, intValue)
 			if err != nil {
 				log.Println(err)
 				break
