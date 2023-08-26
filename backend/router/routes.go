@@ -12,7 +12,10 @@ func InitRouter() {
 	// 获取初始化的数据库
 	db := database.InitDB()
 	// 延迟关闭数据库
-	defer db.Close()
+	defer func() {
+		sqlDB, _ := db.DB()
+		sqlDB.Close()
+	}()
 
 	// 创建一个默认的路由引擎
 	r := gin.Default()

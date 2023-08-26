@@ -3,11 +3,11 @@ package database
 import (
 	"backend/models"
 	"fmt"
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func InitDB() *gorm.DB {
-	driverName := "mysql"
 	host := "127.0.0.1"
 	port := "3306"
 	database := "users_data"
@@ -22,7 +22,7 @@ func InitDB() *gorm.DB {
 		database,
 		charset)
 
-	db, err := gorm.Open(driverName, args)
+	db, err := gorm.Open(mysql.Open(args), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database, err:" + err.Error())
 	}
