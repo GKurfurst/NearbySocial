@@ -2,23 +2,24 @@
   <div class="login">
     <h1>Login</h1>
     <input v-model="username" placeholder="Username">
+    <input v-model="password" placeholder="Password">
     <button @click="login">Login</button>
     <p>{{username}}</p>
   </div>
 </template>
 
 <script>
-
+import authService from "../service/loginService.js";
 export default {
   data() {
     return {
-      username: ''
+      username: '',
+      password: ''
     };
   },
   methods: {
     login() {
-      // 在这里处理登录逻辑，例如将用户名存储在状态管理中
-      // 然后导航到聊天页面
+      authService.checkLogin(this.username, this.password);
       this.$router.push('/chat');
     }
   }
@@ -26,8 +27,5 @@ export default {
 </script>
 
 <style>
-.login {
-  text-align: center;
-  margin-top: 100px;
-}
+
 </style>
