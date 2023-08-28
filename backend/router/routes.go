@@ -23,10 +23,10 @@ func InitRouter() {
 
 	// 注册控制器
 	userController := handlers.BuildUserController(db)
-	r.POST("/register", userController.UserRegister)
-	r.POST("/login", userController.UserLogin)
-	r.POST("/password_change", userController.UserPasswordChange)
-	r.GET("/getclaim", userController.GetUserClaimByTime)
+	r.POST("/api/register", userController.UserRegister)
+	r.POST("/api/login", userController.UserLogin)
+	r.POST("/api/password_change", userController.UserPasswordChange)
+	r.GET("/api/get_claim", userController.GetUserClaimByTime)
 
 	// 在9090端口启动服务
 	panic(r.Run(":9090"))
