@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"backend/models"
+	"backend/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strconv"
 )
 
 func (u *UserController) UserRegister(ctx *gin.Context) {
@@ -56,11 +58,23 @@ func (u *UserController) UserRegister(ctx *gin.Context) {
 		})
 		return
 	}
+
+	var id int64
+	for {
+		id = utils.GenerateUserId()
+		u.db.Model(&models.User{}).Where("user_id = ?", id).First(&user)
+		if user.ID == 0 {
+			break
+		}
+	}
+
 	newUser := models.User{
 		Name:      name,
+		UserId:    strconv.FormatInt(id, 10),
 		Telephone: telephone,
 		Password:  string(hashedPassword),
 	}
+
 	result := u.db.Model(&models.User{}).Create(&newUser)
 	if result.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{

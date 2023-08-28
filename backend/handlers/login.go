@@ -29,7 +29,7 @@ func (u *UserController) UserLogin(ctx *gin.Context) {
 		return
 	}
 
-	//判断手机号是否存在
+	//判断用户名是否存在
 	var user models.User
 	u.db.Model(&models.User{}).Where("name = ?", name).First(&user)
 	if user.ID == 0 {
