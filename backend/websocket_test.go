@@ -73,7 +73,7 @@ func handleWebSocket(c *gin.Context) {
 	for {
 		msg, err := pubsub.ReceiveMessage(c)
 		if err != nil {
-			log.Println("Failed to receive message:", err)
+			log.Println("Failed to receive messages:", err)
 			break
 		}
 
