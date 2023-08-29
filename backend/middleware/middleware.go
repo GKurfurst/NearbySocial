@@ -56,7 +56,7 @@ func JWTAuth() gin.HandlerFunc {
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
 					"status": -1,
-					"msg":    "更新token失败了",
+					"msg":    "更新token失败",
 					"data":   nil,
 				})
 				c.Abort()

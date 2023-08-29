@@ -9,9 +9,30 @@ import (
 )
 
 func (u *UserController) UserLogout(ctx *gin.Context) {
+	name := ctx.PostForm("name")
+
+	//数据验证
+	if len(name) == 0 {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"code":    422,
+			"message": "用户名不能为空",
+		})
+		return
+	}
+
+	//判断用户名是否存在
 	var user models.User
-	user.Online = false
-	if err := u.db.Model(&models.User{}).Save(&user).Error; err != nil {
+	u.db.Model(&models.User{}).Where("name = ?", name).First(&user)
+	if user.ID == 0 {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"code":    422,
+			"message": "用户不存在",
+		})
+		return
+	}
+
+	result := u.db.Model(&models.User{}).Where("name = ?", name).Update("online", false)
+	if result.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"code":    500,
 			"message": "更新用户在线状态失败",
