@@ -35,7 +35,7 @@ func (u *UserController) UserLogout(ctx *gin.Context) {
 	if result.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"code":    500,
-			"message": "更新用户在线状态失败了",
+			"message": "更新用户在线状态失败",
 		})
 		return
 	}
