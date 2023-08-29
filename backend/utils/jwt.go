@@ -2,6 +2,7 @@ package utils
 
 import (
 	"backend/models"
+	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -97,7 +98,6 @@ func GenerateToken(c *gin.Context, user models.User) {
 
 	// 根据claims生成token对象
 	token, err := j.CreateToken(claims)
-
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  -1,
@@ -107,10 +107,38 @@ func GenerateToken(c *gin.Context, user models.User) {
 	}
 
 	log.Println(token)
+	c.Header("token", token)
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,
 	})
 
 	return
 
+}
+
+// 更新token
+func (j *JWT) RefreshToken(tokenString string) (string, error) {
+
+	// 解析原始 Token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte("nearbysocial.top"), nil
+	})
+	if err != nil {
+		return "", err
+	}
+
+	// 获取原始 Token 中的 Claims
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return "", errors.New("Invalid token claims")
+	}
+
+	// 生成新的 Token
+	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	newTokenString, err := newToken.SignedString([]byte("nearbysocial.top"))
+	if err != nil {
+		return "", err
+	}
+
+	return newTokenString, nil
 }

@@ -54,5 +54,21 @@ func (u *UserController) UserLogin(ctx *gin.Context) {
 		"code":    200,
 		"message": "登录成功",
 	})
+
 	utils.GenerateToken(ctx, user)
+	result := u.db.Model(&models.User{}).Where("name = ?", name).Update("online", true)
+	if result.Error != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"code":    500,
+			"message": "更新用户在线状态失败",
+		})
+		return
+	}
+
+	//返回结果
+	ctx.JSON(http.StatusOK, gin.H{
+		"code":    200,
+		"message": "用户状态已更新",
+	})
+
 }

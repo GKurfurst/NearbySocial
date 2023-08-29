@@ -7,7 +7,8 @@ import (
 type User struct {
 	gorm.Model
 	Name      string `gorm:"varchar(20);not null"`
-	UserId    string `gorm:"size:288;not null;"`
+	UserId    uint   `gorm:"not null;unique"`
 	Telephone string `gorm:"varchar(20);not null;unique"`
 	Password  string `gorm:"size:288;not null"`
+	Online    bool
 }

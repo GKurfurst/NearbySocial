@@ -25,6 +25,7 @@ func InitRouter() {
 	userController := handlers.BuildUserController(db)
 	r.POST("/api/register", userController.UserRegister)
 	r.POST("/api/login", userController.UserLogin)
+	r.POST("/api/logout", userController.UserLogout)
 	r.POST("/api/password_change", userController.UserPasswordChange)
 	r.GET("/api/get_claim", userController.GetUserClaimByTime)
 

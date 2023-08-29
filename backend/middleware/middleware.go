@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // 定义一个JWTAuth的中间件
@@ -43,6 +44,29 @@ func JWTAuth() gin.HandlerFunc {
 			})
 			c.Abort()
 			return
+		}
+
+		// 获取 Token 的过期时间
+		expirationTime := claims.ExpiresAt
+
+		// 判断 Token 是否快要过期
+		if time.Until(time.Unix(expirationTime, 0)).Minutes() < 5 {
+			// Token 快要过期，生成新的 Token
+			newToken, err := j.RefreshToken(token)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"status": -1,
+					"msg":    "更新token失败",
+					"data":   nil,
+				})
+				c.Abort()
+				return
+			}
+			// 将新的 Token 返回给客户端
+			c.Header("token", newToken)
+			c.JSON(http.StatusOK, gin.H{
+				"token": newToken,
+			})
 		}
 
 		// 将解析后的有效载荷claims重新写入gin.Context引用对象中
