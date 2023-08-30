@@ -13,10 +13,6 @@
     <main>
       <router-view></router-view>
     </main>
-
-    <footer>
-      <!-- 页脚内容 -->
-    </footer>
   </div>
 </template>
 
