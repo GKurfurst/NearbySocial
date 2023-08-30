@@ -133,6 +133,10 @@ func (j *JWT) RefreshToken(tokenString string) (string, error) {
 		return "", errors.New("Invalid token claims")
 	}
 
+	//修改claim中的生效时间和过期时间
+	claims["nbf"] = int64(time.Now().Unix() - 1000)
+	claims["exp"] = int64(time.Now().Unix() + 3600)
+
 	// 生成新的 Token
 	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	newTokenString, err := newToken.SignedString([]byte("nearbysocial.top"))

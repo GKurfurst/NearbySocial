@@ -28,7 +28,6 @@ func InitDB() *gorm.DB {
 	}
 
 	//迁移
-	db.AutoMigrate(&models.User{})
-
+	db.AutoMigrate(&models.User{}, &models.Request{})
 	return db
 }

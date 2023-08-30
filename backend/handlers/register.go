@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strconv"
 )
 
 func (u *UserController) UserRegister(ctx *gin.Context) {
@@ -69,7 +70,7 @@ func (u *UserController) UserRegister(ctx *gin.Context) {
 
 	newUser := models.User{
 		Name:      name,
-		UserId:    uint(id),
+		UserId:    strconv.FormatInt(id, 10),
 		Telephone: telephone,
 		Password:  string(hashedPassword),
 	}
