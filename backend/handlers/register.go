@@ -11,7 +11,7 @@ import (
 
 func (u *UserController) UserRegister(ctx *gin.Context) {
 	//获取参数
-	name := ctx.PostForm("name")
+	name := ctx.PostForm("username")
 	telephone := ctx.PostForm("telephone")
 	password := ctx.PostForm("password")
 
