@@ -20,6 +20,7 @@ func InitRouter() {
 
 	// 创建一个默认的路由引擎
 	r := gin.Default()
+	r.Use(middleware.CORSMiddleware())
 	r.Use(middleware.JWTAuth())
 
 	//处理跨域请求
@@ -43,6 +44,8 @@ func InitRouter() {
 	r.POST("/api/approve_friend_request", userController.ApproveFriendRequest)
 	r.POST("/api/reject_friend_request", userController.RejectFriendRequest)
 	r.POST("/api/remove_friend", userController.RemoveFriend)
+	r.GET("/api/chat/:friendId", userController.HandleWebSocket)
+	r.GET("/api/get_chat_history", userController.HandleChatHistory)
 
 	// 在9090端口启动服务
 	panic(r.Run(":9090"))

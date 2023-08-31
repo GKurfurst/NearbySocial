@@ -9,7 +9,20 @@ import (
 )
 
 func (u *UserController) UserLogout(ctx *gin.Context) {
-	name := ctx.PostForm("name")
+
+	//获取参数
+	var requestBody struct {
+		Username string `json:"username"`
+	}
+	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"code":    422,
+			"message": "请求数据无效",
+		})
+		return
+	}
+
+	name := requestBody.Username
 
 	//数据验证
 	if len(name) == 0 {

@@ -9,6 +9,6 @@ import (
 // 返回所有已注册用户的信息
 func (u *UserController) GetUsers(c *gin.Context) {
 	var users []models.User
-	u.db.Find(&users)
+	u.db.Preload("Friends").Find(&users)
 	c.JSON(http.StatusOK, users)
 }

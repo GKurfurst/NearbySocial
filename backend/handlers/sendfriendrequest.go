@@ -3,14 +3,27 @@ package handlers
 import (
 	"backend/models"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"strconv"
 )
 
 func (u *UserController) SendFriendRequest(c *gin.Context) {
 
 	//获取参数
-	senderID := c.PostForm("sender_id")
-	receiverID := c.PostForm("receiver_id")
+	var requestBody struct {
+		SenderId   string `json:"sender_id"`
+		ReceiverId string `json:"receiver_id"`
+	}
+	if err := c.ShouldBindJSON(&requestBody); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"code":    422,
+			"message": "请求数据无效",
+		})
+		return
+	}
+
+	senderID := requestBody.SenderId
+	receiverID := requestBody.ReceiverId
 
 	//判断发送者和接收者是否存在
 	var sender models.User

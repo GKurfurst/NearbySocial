@@ -10,10 +10,24 @@ import (
 func (u *UserController) UserPasswordChange(ctx *gin.Context) {
 
 	//获取参数
-	name := ctx.PostForm("name")
-	telephone := ctx.PostForm("telephone")
-	old_password := ctx.PostForm("old_password")
-	new_password := ctx.PostForm("new_password")
+	var requestBody struct {
+		Username    string `json:"username"`
+		Telephone   string `json:"telephone"`
+		OldPassword string `json:"old_password"`
+		NewPassword string `json:"new_password"`
+	}
+	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"code":    422,
+			"message": "请求数据无效",
+		})
+		return
+	}
+
+	name := requestBody.Username
+	telephone := requestBody.Telephone
+	old_password := requestBody.OldPassword
+	new_password := requestBody.NewPassword
 
 	//数据验证
 	if len(name) == 0 {
@@ -87,6 +101,6 @@ func (u *UserController) UserPasswordChange(ctx *gin.Context) {
 	//返回结果
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":    200,
-		"message": "修改密码成功了",
+		"message": "修改密码成功",
 	})
 }

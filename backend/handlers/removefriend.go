@@ -10,8 +10,20 @@ import (
 func (u *UserController) RemoveFriend(c *gin.Context) {
 
 	//获取参数
-	userID := c.PostForm("user_id")
-	friendID := c.PostForm("friend_id")
+	var requestBody struct {
+		UserId   string `json:"user_id"`
+		FriendId string `json:"friend_id"`
+	}
+	if err := c.ShouldBindJSON(&requestBody); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"code":    422,
+			"message": "请求数据无效",
+		})
+		return
+	}
+
+	userID := requestBody.UserId
+	friendID := requestBody.FriendId
 
 	//判断发送者和接收者是否存在
 	var user models.User

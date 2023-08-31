@@ -1,4 +1,4 @@
-package main
+package middleware
 
 import (
 	"github.com/gin-gonic/gin"
@@ -22,19 +22,4 @@ func CORSMiddleware() gin.HandlerFunc {
 		}
 		c.Next()
 	}
-}
-
-func main() {
-	app := gin.Default()
-	app.Use(CORSMiddleware()) // 使用CORS中间件
-
-	// 定义路由
-	app.GET("/route", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "This is cross-origin route1",
-		})
-	})
-
-	// 运行服务
-	app.Run("localhost:8080")
 }

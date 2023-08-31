@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type User struct {
 	gorm.Model
@@ -20,4 +22,11 @@ type Request struct {
 	Receiver   User   `gorm:"foreignkey:ReceiverId"`
 	ReceiverId string `gorm:"not null"`
 	Status     string `gorm:"not null"`
+}
+
+type Message struct {
+	SenderID   string `json:"sender_id"`
+	ReceiverID string `json:"receiver_id"`
+	Content    string `json:"content"`
+	Timestamp  string `json:"timestamp"`
 }

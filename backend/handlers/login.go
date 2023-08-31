@@ -9,9 +9,22 @@ import (
 )
 
 func (u *UserController) UserLogin(ctx *gin.Context) {
+
 	//获取参数
-	name := ctx.PostForm("name")
-	password := ctx.PostForm("password")
+	var requestBody struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"code":    422,
+			"message": "请求数据无效",
+		})
+		return
+	}
+
+	name := requestBody.Username
+	password := requestBody.Password
 
 	//数据验证
 	if len(name) == 0 {

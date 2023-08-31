@@ -61,6 +61,16 @@ func (u *UserController) UserRegister(ctx *gin.Context) {
 		return
 	}
 
+	//判断手机号是否存在
+	u.db.Model(&models.User{}).Where("telephone = ?", telephone).First(&user)
+	if user.ID != 0 {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"code":    422,
+			"message": "手机号已存在",
+		})
+		return
+	}
+
 	//创建用户
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
