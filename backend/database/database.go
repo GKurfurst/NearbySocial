@@ -8,11 +8,11 @@ import (
 )
 
 func InitDB() *gorm.DB {
-	host := "127.0.0.1"
+	host := "8.130.23.188"
 	port := "3306"
-	database := "users_data"
-	username := "root"
-	password := "zkq200349"
+	database := "testsocial"
+	username := "mysqluser"
+	password := "Bjlgdxmysql"
 	charset := "utf8"
 	args := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=%s&parseTime=true",
 		username,

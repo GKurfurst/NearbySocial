@@ -4,6 +4,7 @@ import (
 	"backend/database"
 	"backend/handlers"
 	"backend/middleware"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +21,12 @@ func InitRouter() {
 	// 创建一个默认的路由引擎
 	r := gin.Default()
 	r.Use(middleware.JWTAuth())
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:5173"}                    // 允许的源
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}             // 允许的HTTP方法
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type"} // 允许的请求头
+	config.AllowCredentials = true                                             // 允许携带认证信息
+	r.Use(cors.New(config))
 
 	// 注册控制器
 	userController := handlers.BuildUserController(db)
