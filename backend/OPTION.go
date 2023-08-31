@@ -31,7 +31,7 @@ func main() {
 	// 定义路由
 	app.GET("/route", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "This is cross-origin route1",
+			"message": "This is cross-origin route",
 		})
 	})
 
