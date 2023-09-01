@@ -13,6 +13,9 @@ type User struct {
 	Friends   []User    `gorm:"many2many:user_friends;association_jointable_foreignkey:user_id;association_foreignkey:friend_id"`
 	Requests  []Request `gorm:"foreignkey:ReceiverId"`
 	Online    bool
+	GeoHash   string  //位置GeoHash值
+	Longitude float64 //经度
+	Latitude  float64 //纬度
 }
 
 type Request struct {

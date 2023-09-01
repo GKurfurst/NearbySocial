@@ -45,7 +45,10 @@ func InitRouter() {
 	r.POST("/api/reject_friend_request", userController.RejectFriendRequest)
 	r.POST("/api/remove_friend", userController.RemoveFriend)
 	r.GET("/api/chat/:friendId", userController.HandleWebSocket)
-	r.GET("/api/get_chat_history", userController.HandleChatHistory)
+	r.GET("/api/get_chat_history/:userId/:friendId", userController.HandleChatHistory)
+	r.POST("/api/update_location", userController.UpdateLocation)
+	r.GET("/api/get_distance/:user1_id/:user2_id", userController.GetDistance)
+	r.POST("/api/find_nearby_users", userController.FindNearbyUsers)
 
 	// 在9090端口启动服务
 	panic(r.Run(":9090"))
