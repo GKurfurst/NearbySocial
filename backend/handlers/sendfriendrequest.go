@@ -25,6 +25,12 @@ func (u *UserController) SendFriendRequest(c *gin.Context) {
 	senderID := requestBody.SenderId
 	receiverID := requestBody.ReceiverId
 
+	//判断发送者和接收者是否为同一人
+	if senderID == receiverID {
+		c.JSON(400, gin.H{"error": "The sender and the receiver are the same person"})
+		return
+	}
+
 	//判断发送者和接收者是否存在
 	var sender models.User
 	if err := u.db.Where("user_id = ?", senderID).First(&sender).Error; err != nil {
@@ -40,8 +46,40 @@ func (u *UserController) SendFriendRequest(c *gin.Context) {
 
 	//判断该请求是否已存在
 	var existingRequest models.Request
-	if err := u.db.Where("sender_id = ? AND receiver_id = ?", sender.ID, receiver.ID).First(&existingRequest).Error; err == nil {
+	if err := u.db.Where("sender_id = ? AND receiver_id = ? AND status = 'pending' ", sender.ID, receiver.ID).First(&existingRequest).Error; err == nil {
 		c.JSON(400, gin.H{"error": "Friend request already exists"})
+		return
+	}
+
+	if err := u.db.Where("sender_id = ? AND receiver_id = ? AND status = 'approved' ", sender.ID, receiver.ID).First(&existingRequest).Error; err == nil {
+		c.JSON(400, gin.H{"error": "You are already friends"})
+		return
+	}
+
+	//判断对方是否发送同样请求
+	if err := u.db.Where("sender_id = ? AND receiver_id = ? AND status = 'pending' ", receiver.ID, sender.ID).First(&existingRequest).Error; err == nil {
+
+		//改变请求状态、并添加好友
+		existingRequest.Status = "approved"
+		u.db.Save(&existingRequest)
+
+		sender.Friends = append(sender.Friends, receiver)
+		receiver.Friends = append(receiver.Friends, sender)
+
+		u.db.Save(&sender)
+		u.db.Save(&receiver)
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "This user has sent you a friend request and you are now friends",
+		})
+
+		return
+	}
+
+	if err := u.db.Where("sender_id = ? AND receiver_id = ? AND status = 'approved' ", receiver.ID, sender.ID).First(&existingRequest).Error; err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "You are already friends",
+		})
 		return
 	}
 
