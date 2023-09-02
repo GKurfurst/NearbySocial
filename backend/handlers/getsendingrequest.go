@@ -20,7 +20,7 @@ func (u *UserController) GetSendingRequest(c *gin.Context) {
 
 	//判断是否存在请求
 	var requests []models.Request
-	if err := u.db.Model(&models.Request{}).Where("status = 'pending' AND receiver_id = ?", user.ID).Find(&requests).Error; err != nil {
+	if err := u.db.Model(&models.Request{}).Preload("Sender").Preload("Receiver").Where("status = 'pending' AND receiver_id = ?", user.ID).Find(&requests).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "查询失败",
 		})
