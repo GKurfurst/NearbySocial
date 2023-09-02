@@ -44,6 +44,7 @@ func InitRouter() {
 	r.POST("/api/approve_friend_request", userController.ApproveFriendRequest)
 	r.POST("/api/reject_friend_request", userController.RejectFriendRequest)
 	r.POST("/api/remove_friend", userController.RemoveFriend)
+	r.GET("/api/get_sending_request/:user_id", userController.GetSendingRequest)
 	r.GET("/api/chat/:friendId", userController.HandleWebSocket)
 	r.GET("/api/get_chat_history/:userId/:friendId", userController.HandleChatHistory)
 	r.POST("/api/update_location", userController.UpdateLocation)
