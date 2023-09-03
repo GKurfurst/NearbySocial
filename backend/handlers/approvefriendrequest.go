@@ -37,19 +37,11 @@ func (u *UserController) ApproveFriendRequest(c *gin.Context) {
 		return
 	}
 
-	//判断请求是否存在
+	//判断请求是否存在且状态为已发送
 	var request models.Request
-	if err := u.db.Where("sender_id = ? AND receiver_id = ?", sender.ID, receiver.ID).First(&request).Error; err != nil {
+	if err := u.db.Where("sender_id = ? AND receiver_id = ? AND status = 'pending' ", sender.ID, receiver.ID).First(&request).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Request not found",
-		})
-		return
-	}
-
-	//判断该请求是否处于已发送状态
-	if request.Status != "pending" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid request status",
 		})
 		return
 	}
