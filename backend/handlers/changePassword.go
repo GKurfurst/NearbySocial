@@ -101,6 +101,6 @@ func (u *UserController) UserPasswordChange(ctx *gin.Context) {
 	//返回结果
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":    200,
-		"message": "修改密码成功",
+		"message": "修改密码成功了",
 	})
 }
