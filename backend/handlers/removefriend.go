@@ -60,6 +60,11 @@ func (u *UserController) RemoveFriend(c *gin.Context) {
 	u.db.Save(&user)
 	u.db.Save(&friend)
 
+	//修改request状态
+	u.db.Model(&models.Request{}).Where("sender_id = ? AND receiver_id = ? ", user.ID, friend.ID).Update("status", "rejected")
+	//反向修改
+	u.db.Model(&models.Request{}).Where("sender_id = ? AND receiver_id = ? ", friend.ID, user.ID).Update("status", "rejected")
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Friend removed",
 	})
