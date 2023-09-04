@@ -1,4 +1,4 @@
-export class WebSocket {
+class PackedWebSocket {
     constructor(url) {
         this.ws = new window.WebSocket(url);
     }
@@ -10,4 +10,10 @@ export class WebSocket {
     onmessage(handler) {
         this.ws.onmessage = handler;
     }
+
+    close() {
+        this.ws.close();
+    }
 }
+
+export default PackedWebSocket;
