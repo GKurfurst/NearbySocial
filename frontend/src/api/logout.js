@@ -1,7 +1,8 @@
-import { useUserStore } from '../stores/user.js'; // 导入 User Store
+import { useUserStore } from '../stores/user.js';
+import {useChatStore} from "../stores/chat.js"; // 导入 User Store
 
 export function logout() {
 
-    const userStore = useUserStore();
-    userStore.clearUser();
+    useUserStore().clearUser();
+    useChatStore().clearChatStore();
 }

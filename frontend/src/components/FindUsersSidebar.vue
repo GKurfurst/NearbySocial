@@ -1,20 +1,22 @@
 <template>
-  <div class="find-user-sidebar">
-    <el-input v-model="searchText" placeholder="Search user" @input="searchUsers" />
+  <el-aside class="find-user-sidebar">
+    <el-input v-model="searchText" placeholder="搜索用户" @input="searchUsers" />
     <el-menu class="user-list">
       <el-menu-item
-          @click="selectUser(this.searchResults)"
+          v-if="searchResults.Name"
+          @click="selectUser(searchResults)"
       >
-        {{ this.searchResults.Name }}
+        {{ searchResults.Name }}
       </el-menu-item>
     </el-menu>
-  </div>
+  </el-aside>
 </template>
 
 <script>
 import getUserByName from "../api/getUserByName.js";
-import {handleMultiJSONResponse} from "../utils/response.js";
-import {handlePossibleToken, handleToken} from "../utils/token.js";
+import { handleMultiJSONResponse } from "../utils/response.js";
+import { handlePossibleToken, handleToken } from "../utils/token.js";
+import {updatePosition} from "../api/position.js";
 export default {
   data() {
     return {
@@ -52,19 +54,34 @@ export default {
 </script>
 
 <style scoped>
-/* 样式可以根据需要进行调整 */
+/* 调整搜索框样式 */
 .find-user-sidebar {
   width: 300px;
   padding: 20px;
 }
 
+/* 调整输入框样式 */
+.el-input {
+  width: 100%;
+}
+
+/* 调整用户列表样式 */
 .user-list {
   list-style-type: none;
   padding: 0;
   cursor: pointer;
 }
 
-.user-list li {
+.user-list .el-menu-item {
+  padding: 5px 10px;
   margin: 5px 0;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.user-list .el-menu-item:hover {
+  background-color: #f0f5ff; /* 鼠标悬停时的背景色 */
 }
 </style>

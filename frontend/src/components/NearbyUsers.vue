@@ -5,29 +5,29 @@
       <el-card
           v-for="user in nearbyUsers"
           :key="user.user.UserId"
-          :header="user.user.Name"
+          class="user-card"
           shadow="hover"
-          style="width: 300px; margin: 10px;"
       >
-        <!-- 在这里显示用户信息，可以根据你的数据结构进行修改 -->
-        <p>用户 ID: {{ user.user.UserId }}</p>
-        <p>距离: {{ Math.round(user.distance) }}米</p>
-        <!-- 其他用户信息 -->
-
-        <!-- 添加好友按钮 -->
-        <el-button
-            v-if="!user.friendRequestSent"
-            type="primary"
-            @click="sendFriendRequest(user.user.UserId, user)"
-        >
-          添加好友
-        </el-button>
-        <el-tag
-            v-else
-            type="success"
-        >
-          已发送好友请求
-        </el-tag>
+        <div slot="header" class="user-card-header">
+          <img :src="this.avatarUrl" alt="User Avatar" class="user-avatar" />
+          {{ user.user.Name }}
+        </div>
+        <div class="user-info">
+          <p>用户号码: {{ user.user.Telephone }}</p>
+          <p>距离: {{ Math.round(user.distance) }} 米</p>
+          <!-- 其他用户信息 -->
+        </div>
+        <div class="user-actions">
+          <el-button
+              v-if="!user.friendRequestSent"
+              type="primary"
+              round
+              @click="sendFriendRequest(user.user.UserId, user)"
+          >
+            添加好友
+          </el-button>
+          <el-tag v-else type="success">已发送好友请求</el-tag>
+        </div>
       </el-card>
     </div>
   </div>
@@ -38,11 +38,12 @@ import NearbyUsersSidebar from "./NearbyUsersSidebar.vue";
 import { handlePossibleToken } from "../utils/token.js";
 import { getNearbyUser } from "../api/getNearbyUser.js";
 import { sendFriendRequest } from "../api/friend.js";
-import {useUserStore} from "../stores/user.js";
+import { useUserStore } from "../stores/user.js";
 
 export default {
   data() {
     return {
+      avatarUrl: "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png",
       nearbyUsers: [], // 存储附近用户的数组
     };
   },
@@ -68,3 +69,42 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.user-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.user-card {
+  width: 300px;
+  margin-bottom: 10px;
+}
+
+.user-card-header {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.user-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

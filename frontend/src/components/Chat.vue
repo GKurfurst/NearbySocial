@@ -1,35 +1,35 @@
 <template>
   <div class="chat-container">
-    <!-- 左侧侧边栏 -->
     <ChatSidebar @friend-selected="handleFriendSelected" ></ChatSidebar>
-    <div class="chat-messages">
+    <div class="chat-area">
+      <div id = "chat-messages" class="chat-messages">
+        <div v-if="showHistory">
+          <div v-for="message in historyMessages" class="message" :class="getMessageClass(message)">
+            <div class="message-time">{{ message.timestamp }}</div>
+            {{ message.content }}
+          </div>
+        </div>
+        <div v-else>
+          <div v-for="message in messages" class="message" :class="getMessageClass(message)">
+            <div class="message-time">{{ message.timestamp }}</div>
+            {{ message.content }}
+          </div>
+        </div>
+      </div>
       <button @click="toggleHistory" class="show-history-button">
         {{ showHistory ? 'Hide History' : 'Show History' }}
       </button>
-      <div v-if="showHistory">
-        <div v-for="message in historyMessages" :key="message.Timestamp" class="message" :class="getMessageClass(message)">
-          <div class="message-time">{{ message.timestamp }}</div>
-          {{ message.content }}
-        </div>
+      <div class="chat-input">
+        <el-input
+            v-model="newMessage"
+            @keyup.enter="sendMessage"
+            placeholder="Type your message..."
+            class="chat-input-box"
+        />
+        <el-button @click="sendMessage" class="send-button">Send</el-button>
       </div>
-      <div v-else>
-        <div v-for="message in messages" :key="message.Timestamp" class="message" :class="getMessageClass(message)">
-          <div class="message-time">{{ message.Timestamp }}</div>
-          {{ message.Content }}
-        </div>
+      <div class="chat-content">
       </div>
-    </div>
-    <div class="chat-input">
-      <el-input
-          v-model="newMessage"
-          @keyup.enter="sendMessage"
-          placeholder="Type your message..."
-          class="chat-input-box"
-      />
-      <el-button @click="sendMessage" class="send-button">Send</el-button>
-    </div>
-    <div class="chat-content">
-      <!-- 其他聊天内容相关代码 -->
     </div>
   </div>
 </template>
@@ -48,46 +48,30 @@ export default {
     };
   },
 
-  mounted() {
+  created() {
     console.log(useUserStore().isLoggedIn);
     console.log(useUserStore().getUserId);
     console.log(this.$route.params.friendId);
-    if (this.$route.params.friendId !== undefined) {
-      console.log('detected');
-      this.initChatService(this.$route.params.friendId);
-    }
-
-  },
-  beforeRouteUpdate(to, from, next) {
-    console.log("route change" + to.params.friendId);
-    if (to.params.friendId !== from.params.friendId) {
-      if (!this.chatServices[to.params.friendId]) {
-        this.initChatService(to.params.friendId);
-      }
-    }
-    next();
+    // if (this.$route.params.friendId === undefined){
+    //   this.$router.push(`/main/chat/${useChatStore().getChattedFriends()[0]}`);
+    //   //this.$forceUpdate();
+    // }
   },
   components: {
     ChatSidebar
   },
   computed: {
     historyMessages() {
-      return useChatStore().historyMessages[this.$route.params.friendId] || [];
+      return useChatStore().historyMessages[this.$route.params.friendId].slice().sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp)) || [];
     },
     messages() {
-      return useChatStore().userMessages[this.$route.params.friendId] || [];
+      return useChatStore().userMessages[this.$route.params.friendId].slice().sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp)) || [];
     },
   },
   methods: {
-    async fetchHistoryMessages(friendId) {
-      const response = await getHistoryMessages(friendId);
-      for (const message of response.data.history) {
-        useChatStore().addHistoryMessage(friendId, message);
-      }
-      const response2 = await getHistoryMessages(useUserStore().getUserId, friendId);
-      for (const message of response2.data.history) {
-        useChatStore().addHistoryMessage(friendId, message);
-      }
+    scrollToBottom() {
+      const container = document.getElementById('chat-messages');
+      container.scrollIntoView(false);
     },
     getMessageClass(message) {
       return {
@@ -97,30 +81,30 @@ export default {
     },
 
     toggleHistory() {
+      this.$forceUpdate();
       this.showHistory = !this.showHistory;
+      this.$forceUpdate();
     },
     startChat() {
       console.log("start chat");
       this.$router.push(`/main/chat/${this.targetFriendId}`);
+      this.$forceUpdate();
     },
-    initChatService(friendId) {
-      this.chatServices[friendId] = new ChatService(friendId);
-      this.fetchHistoryMessages(friendId);
-      },
     sendMessage() {
       if (this.newMessage.trim() === '') return;
       const message = {
         sender_id: useUserStore().getUserId, // 你的 SenderID
         receiver_id: this.$route.params.friendId, // 你的 ReceiverID
-        Content: this.newMessage,
-        Timestamp: new Date().toISOString(), // 生成时间戳
+        content: this.newMessage,
+        timestamp: new Date().toISOString(), // 生成时间戳
       };
-      this.chatServices[this.$route.params.friendId].sendMessage(message);
+      useChatStore().chatServices[this.$route.params.friendId].sendMessage(message);
       this.newMessage = '';
     },
     handleFriendSelected(friendId) {
       this.targetFriendId = friendId;
       this.startChat();
+      this.$forceUpdate();
     },
   }
 };
@@ -128,8 +112,10 @@ export default {
 
 <style scoped>
 .chat-container {
-  max-width: 600px;
+  display: flex;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 .chat-messages {
@@ -139,13 +125,21 @@ export default {
   overflow-y: auto;
 }
 
+.chat-area {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  overflow-y: auto;
+}
 .my-message {
+  margin-left: 400px;
   text-align: right;
   background-color: #007bff;
   color: #fff;
   border-radius: 5px;
   padding: 5px 10px;
-  margin: 5px 0;
+  max-width: 50%;
 }
 
 .other-message {
@@ -154,6 +148,7 @@ export default {
   border-radius: 5px;
   padding: 5px 10px;
   margin: 5px 0;
+  max-width: 50%;
 }
 
 .message-time {

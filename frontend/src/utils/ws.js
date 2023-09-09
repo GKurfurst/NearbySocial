@@ -6,11 +6,12 @@ class PackedWebSocket {
     send(msg) {
         this.ws.send(msg);
     }
-
     onmessage(handler) {
         this.ws.onmessage = handler;
     }
-
+    onclose(handler) {
+        this.ws.onclose = handler;
+    }
     close() {
         this.ws.close();
     }

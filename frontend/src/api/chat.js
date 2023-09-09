@@ -8,8 +8,14 @@ class ChatService {
         this.friendID = id;
         this.ws = new PackedWebSocket(`ws://localhost:9090/api/chat/${id}?userId=${useUserStore().getUserId}`);
         this.ws.onmessage(this.handleMessage.bind(this));
+        this.ws.onclose(this.handleClose.bind(this));
     }
 
+    connect() {
+        this.ws = new PackedWebSocket(`ws://localhost:9090/api/chat/${this.friendID}?userId=${useUserStore().getUserId}`);
+        this.ws.onmessage(this.handleMessage.bind(this));
+        this.ws.onclose(this.handleClose.bind(this));
+    }
     sendMessage(message) {
         this.ws.send(JSON.stringify(message));
         useChatStore().addMessage(this.friendID, message);
@@ -20,6 +26,12 @@ class ChatService {
         useChatStore().addMessage(this.friendID, message);
     }
 
+    handleClose(){
+        // 连接关闭后，等待一段时间后尝试重新连接
+        setTimeout(() => {
+            this.connect();
+        }, 2000); // 这里可以根据需要设置重连的间隔时间
+    };
 
 }
 

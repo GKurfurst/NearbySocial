@@ -10,6 +10,7 @@ import Chat from "../components/Chat.vue";
 import FindUsers from "../components/FindUsers.vue";
 import FriendList from "../components/FriendList.vue";
 import NearbyUsers from "../components/NearbyUsers.vue";
+import {useChatStore} from "../stores/chat.js";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -40,7 +41,6 @@ const router = createRouter({
                     path: 'chat/:friendId',
                     component: Chat,
                 },
-                // 添加其他子组件的路由配置
             ]
         },
         {

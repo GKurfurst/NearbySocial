@@ -1,15 +1,17 @@
 <template>
-  <el-form :model="form" label-width="80px">
-    <el-form-item label="选择范围">
-      <el-radio-group v-model="form.range">
-        <el-radio-button label="500">500m</el-radio-button>
-        <el-radio-button label="1000">1000m</el-radio-button>
-        <el-radio-button label="2000">2000m</el-radio-button>
-        <el-radio-button label="5000">5000m</el-radio-button>
-      </el-radio-group>
-    </el-form-item>
-    <el-button type="primary" @click="fetchNearbyUsers">搜索</el-button>
-  </el-form>
+  <el-aside class="nearby-users-sidebar">
+    <el-form :model="form" label-width="80px" label-position="top">
+      <el-form-item label="选择范围">
+        <el-radio-group v-model="form.range">
+          <el-radio-button label="500">500m</el-radio-button>
+          <el-radio-button label="1000">1000m</el-radio-button>
+          <el-radio-button label="2000">2000m</el-radio-button>
+          <el-radio-button label="5000">5000m</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-button type="primary" @click="fetchNearbyUsers">搜索</el-button>
+    </el-form>
+  </el-aside>
 </template>
 
 <script>
@@ -29,3 +31,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+.nearby-users-sidebar {
+width: 350px;
+padding: 20px;
+}
+</style>

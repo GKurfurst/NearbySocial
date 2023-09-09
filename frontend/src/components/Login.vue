@@ -4,7 +4,6 @@
     <el-input v-model="password" placeholder="Password" type="password" />
     <el-button type="primary" @click="login">Login</el-button>
     <el-button type="text" @click="goToRegister">Register</el-button>
-    <p>{{ username }}</p>
     <div v-if="loginStatus === 'success'" class="success-message">
       Login successful! If it's not redirecting automatically, You can manually <router-link to="/auth/login">login</router-link>.
     </div>
@@ -61,7 +60,7 @@ export default {
           console.log('reqa')
           handlePossibleToken(await updatePosition());
           this.loginStatus = 'success';
-          this.$router.push('/main');
+          this.$router.push('/main/friend-list');
         } else {
           console.error("登录失败");
           this.loginStatus = 'error';

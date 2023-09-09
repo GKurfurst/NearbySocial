@@ -5,7 +5,6 @@
     <el-input v-model="password" placeholder="Password" type="password" />
     <el-button type="primary" @click="register">Register</el-button>
     <el-button type="text" @click="goToLogin">Login</el-button>
-    <p>{{ username }}</p>
     <div v-if="registerStatus === 'success'" class="success-message">
       Registration successful! If it's not redirecting automatically, You can manually <router-link to="/auth/login">login</router-link>.
     </div>
