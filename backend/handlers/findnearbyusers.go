@@ -72,7 +72,7 @@ func (u *UserController) FindNearbyUsers(c *gin.Context) {
 		if distance <= radius && distance > 0 {
 			nearbyWithinDistance = append(nearbyWithinDistance, NearbyUser{
 				User:     u,
-				Distance: distance,
+				Distance: distance * 1000,
 			})
 		}
 	}

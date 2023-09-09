@@ -13,7 +13,7 @@ import (
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//过滤是否验证token， login结构直接放行，这里为了简单起见，直接判断路径中是否带login和register，携带就直接放行
-		if strings.Contains(c.Request.RequestURI, "login") || strings.Contains(c.Request.RequestURI, "register") {
+		if strings.Contains(c.Request.RequestURI, "login") || strings.Contains(c.Request.RequestURI, "register") || strings.Contains(c.Request.RequestURI, "chat") {
 			return
 		}
 

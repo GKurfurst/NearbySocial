@@ -28,9 +28,7 @@ func (u *UserController) GetSendingRequest(c *gin.Context) {
 	}
 
 	if len(requests) == 0 {
-		c.JSON(http.StatusNotFound, gin.H{
-			"message": "No request",
-		})
+		c.JSON(http.StatusOK, requests)
 		return
 	}
 

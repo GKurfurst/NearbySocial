@@ -36,8 +36,8 @@ func (u *UserController) HandleChatHistory(c *gin.Context) {
 	}
 
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
+		Addr:     "8.130.23.188:6379",
+		Password: "Bjlgdxredis",
 		DB:       0,
 	})
 

@@ -20,16 +20,15 @@ func InitRouter() {
 
 	// 创建一个默认的路由引擎
 	r := gin.Default()
-	r.Use(middleware.CORSMiddleware())
-	r.Use(middleware.JWTAuth())
-
 	//处理跨域请求
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost"}                         // 允许的源
-	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}             // 允许的HTTP方法
-	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type"} // 允许的请求头
-	config.AllowCredentials = true                                             // 允许携带认证信息
+	config.AllowOrigins = []string{"http://localhost:5173"}                             // 允许的源
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}                      // 允许的HTTP方法
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "token"} // 允许的请求头
+	config.AllowCredentials = true                                                      // 允许携带认证信息
 	r.Use(cors.New(config))
+	r.Use(middleware.CORSMiddleware())
+	r.Use(middleware.JWTAuth())
 
 	// 注册控制器
 	userController := handlers.BuildUserController(db)

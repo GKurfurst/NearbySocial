@@ -52,8 +52,8 @@ func (u *UserController) HandleWebSocket(c *gin.Context) {
 	defer conn.Close()
 
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
+		Addr:     "8.130.23.188:6379",
+		Password: "Bjlgdxredis",
 		DB:       0,
 	})
 
@@ -61,7 +61,7 @@ func (u *UserController) HandleWebSocket(c *gin.Context) {
 	pubsub := redisClient.Subscribe(c, userId+":"+friendId)
 	defer pubsub.Close()
 
-	// 发送心跳包
+	//发送心跳包
 	go func() {
 		for {
 			err := conn.WriteMessage(websocket.PingMessage, nil)
